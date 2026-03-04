@@ -22,7 +22,7 @@ const getShowTime = () => {
   const configured = new Date(TARGET_TIME_ISO);
   if (!Number.isNaN(configured.getTime())) return configured;
   const fallback = new Date();
-  fallback.setHours(20, 0, 0, 0); // Today at 8:00 PM local time
+  fallback.setHours(2, 0, 0, 0); // Today at 8:00 PM local time
   if (fallback.getTime() < Date.now()) fallback.setDate(fallback.getDate() + 1);
   return fallback;
 };
@@ -329,7 +329,7 @@ export default function Cinema() {
                   >
                     <span className="inline-flex items-center gap-2">
                       {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume className="h-4 w-4" />}
-                      {isMuted ? 'Unmute' : 'Mute'}
+                      {isMuted ? 'Click to play music' : 'Mute'}
                     </span>
                   </button>
                 </div>
