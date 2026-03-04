@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import confetti from 'canvas-confetti';
-import { VolumeX, Video } from 'lucide-react';
+import { VolumeX, Video, Volume } from 'lucide-react';
 import nalathPhoto from '@/lib/nalath.jpeg';
 import perfectSong from '@/lib/Ellie Goulding - Love Me Like You Do (Official Video).mp3';
 import world from '@/lib/world.jpeg';
@@ -22,7 +22,7 @@ const getShowTime = () => {
   const configured = new Date(TARGET_TIME_ISO);
   if (!Number.isNaN(configured.getTime())) return configured;
   const fallback = new Date();
-  fallback.setHours(2, 0, 0, 0); // Today at 8:00 PM local time
+  fallback.setHours(20, 0, 0, 0); // Today at 8:00 PM local time
   if (fallback.getTime() < Date.now()) fallback.setDate(fallback.getDate() + 1);
   return fallback;
 };
@@ -76,6 +76,7 @@ export default function Cinema() {
   const [stage, setStage] = useState('');
   const [musicOn, setMusicOn] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
+  const [audioBlocked, setAudioBlocked] = useState(false);
   const [dimming, setDimming] = useState(false);
   const [tick, setTick] = useState(false);
   const [showSecretMessage, setShowSecretMessage] = useState(false);
@@ -88,12 +89,39 @@ export default function Cinema() {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      audioRef.current?.play()
-        .then(() => setMusicOn(true))
-        .catch((err) => console.error('Error auto-playing audio:', err));
+      if (!audioRef.current) return;
+      // Chrome mobile often blocks unmuted autoplay on production deployments.
+      // Start muted first, then allow user to unmute.
+      audioRef.current.muted = true;
+      setIsMuted(true);
+      audioRef.current.play()
+        .then(() => {
+          setMusicOn(true);
+          setAudioBlocked(false);
+        })
+        .catch((err) => {
+          console.error('Error auto-playing audio:', err);
+          setAudioBlocked(true);
+        });
     }, 2000);
     return () => clearTimeout(timer);
   }, []);
+
+  useEffect(() => {
+    if (!audioBlocked) return;
+    const resumeOnFirstGesture = () => {
+      if (!audioRef.current) return;
+      audioRef.current.play()
+        .then(() => {
+          setMusicOn(true);
+          setAudioBlocked(false);
+          window.removeEventListener('pointerdown', resumeOnFirstGesture);
+        })
+        .catch((err) => console.error('Gesture audio start failed:', err));
+    };
+    window.addEventListener('pointerdown', resumeOnFirstGesture, { passive: true });
+    return () => window.removeEventListener('pointerdown', resumeOnFirstGesture);
+  }, [audioBlocked]);
 
   useEffect(() => {
     const timer = setTimeout(() => setShowSecretMessage(true), 10000);
@@ -243,18 +271,25 @@ export default function Cinema() {
               <div className="mt-6 text-center">
                 {remaining > 0 ? (
                   <motion.div
-                    className="font-['Orbitron'] inline-flex items-center gap-2 md:gap-3 text-lg"
+                    className="font-['Orbitron'] w-full flex flex-col items-center gap-2 text-lg"
                     animate={tick ? { scale: [1, 1.025, 1] } : { scale: 1 }}
                     transition={{ duration: 0.22 }}
                   >
-                    <span className="text-[#D4AF37]">⏰</span>
-                    <span className="text-[#D4AF37]">Movie starts in:</span>
-                    <CountdownDigit value={pad(hours)} />
-                    <span className="text-[#D4AF37]">hours</span>
-                    <CountdownDigit value={pad(minutes)} />
-                    <span className="text-[#D4AF37]">minutes</span>
-                    <CountdownDigit value={pad(seconds)} />
-                    <span className="text-[#D4AF37]">seconds</span>
+                    <span className="text-[#D4AF37] text-center">⏰ Movie starts in:</span>
+                    <div className="grid grid-cols-3 gap-2 md:gap-3">
+                      <div className="flex flex-col items-center gap-1">
+                        <CountdownDigit value={pad(hours)} />
+                        <span className="text-[#D4AF37] text-xs md:text-sm">hours</span>
+                      </div>
+                      <div className="flex flex-col items-center gap-1">
+                        <CountdownDigit value={pad(minutes)} />
+                        <span className="text-[#D4AF37] text-xs md:text-sm">minutes</span>
+                      </div>
+                      <div className="flex flex-col items-center gap-1">
+                        <CountdownDigit value={pad(seconds)} />
+                        <span className="text-[#D4AF37] text-xs md:text-sm">seconds</span>
+                      </div>
+                    </div>
                   </motion.div>
                 ) : (
                   <p className="font-['Orbitron'] text-[#FFD700] text-xl">Movie Time! Join Now 🎬</p>
@@ -292,9 +327,17 @@ export default function Cinema() {
                     disabled={!musicOn}
                     className="rounded-lg border border-[#D4AF37]/45 bg-black/35 px-4 py-2 text-sm text-[#D4AF37] hover:bg-black/60"
                   >
-                    <span className="inline-flex items-center gap-2"><VolumeX className="h-4 w-4" /> {isMuted ? 'Unmute' : 'Mute'}</span>
+                    <span className="inline-flex items-center gap-2">
+                      {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume className="h-4 w-4" />}
+                      {isMuted ? 'Unmute' : 'Mute'}
+                    </span>
                   </button>
                 </div>
+                {audioBlocked && (
+                  <p className="text-xs text-[#D4AF37]/85 text-center">
+                    Tap anywhere once to enable background music in Chrome.
+                  </p>
+                )}
                 <AnimatePresence>
                   {stage && (
                     <motion.p
