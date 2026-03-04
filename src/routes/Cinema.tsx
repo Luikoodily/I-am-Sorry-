@@ -8,7 +8,7 @@ import world from '@/lib/world.jpeg';
 
 const GOOGLE_MEET_LINK = 'https://meet.google.com/vtp-yfvz-vkf';
 const MEET_SETTINGS_LINK = 'https://meet.google.com/settings';
-const MOVIE_TITLE = 'Gyaarah Gyaarah(11:11) Thriller series';
+const MOVIE_TITLE = 'The one I Love Romance/Thriller';
 const YOUR_NAME = 'Luicha';
 const HER_NAME = 'Chinnu';
 const DURATION = '2h 30m';
