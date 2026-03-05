@@ -6,9 +6,9 @@ import nalathPhoto from '@/lib/nalath.jpeg';
 import perfectSong from '@/lib/Ellie Goulding - Love Me Like You Do (Official Video).mp3';
 import world from '@/lib/world.jpeg';
 
-const GOOGLE_MEET_LINK = 'https://meet.google.com/vtp-yfvz-vkf';
+const GOOGLE_MEET_LINK = 'https://meet.google.com/bzi-dnbh-hmn';
 const MEET_SETTINGS_LINK = 'https://meet.google.com/settings';
-const MOVIE_TITLE = 'The one I Love Romance/Thriller';
+const MOVIE_TITLE = 'How to Train Your Dragon The Hidden World';
 const YOUR_NAME = 'Luicha';
 const HER_NAME = 'Chinnu';
 const DURATION = '2h 30m';
@@ -134,9 +134,12 @@ export default function Cinema() {
   const seconds = Math.floor((remaining % (1000 * 60)) / 1000);
 
   useEffect(() => {
-    setTick(true);
-    const t = setTimeout(() => setTick(false), 220);
-    return () => clearTimeout(t);
+    const immediateId = setTimeout(() => setTick(true), 0);
+    const resetId = setTimeout(() => setTick(false), 220);
+    return () => {
+      clearTimeout(immediateId);
+      clearTimeout(resetId);
+    };
   }, [hours, minutes, seconds]);
 
   const showTimeLabel = useMemo(
