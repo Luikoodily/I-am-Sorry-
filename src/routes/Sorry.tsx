@@ -4,9 +4,9 @@ import { Heart, Music, Volume2, Sparkles, RotateCcw } from 'lucide-react';
 import '../App.css';
 
 // Import local assets
-import moshamPhoto from '@/lib/mosham.jpeg';
-import nalathPhoto from '@/lib/nalath.jpeg';
-import perfectSong from '@/lib/Ed Sheeran - Perfect (Official Music Video).mp3';
+import moshamPhoto from '@/lib/pics/mosham.jpeg';
+import nalathPhoto from '@/lib/pics/nalath.jpeg';
+import perfectSong from '@/lib/audio/Ed Sheeran - Perfect (Official Music Video).mp3';
 
 // Types
 interface SorryMessage {

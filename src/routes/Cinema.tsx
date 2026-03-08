@@ -2,9 +2,9 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import confetti from 'canvas-confetti';
 import { VolumeX, Video, Volume } from 'lucide-react';
-import nalathPhoto from '@/lib/nalath.jpeg';
-import perfectSong from '@/lib/Ellie Goulding - Love Me Like You Do (Official Video).mp3';
-import world from '@/lib/world.jpeg';
+import nalathPhoto from '@/lib/pics/nalath.jpeg';
+import perfectSong from '@/lib/audio/Ellie Goulding - Love Me Like You Do (Official Video).mp3';
+import world from '@/lib/pics/world.jpeg';
 
 const GOOGLE_MEET_LINK = 'https://meet.google.com/bzi-dnbh-hmn';
 const MEET_SETTINGS_LINK = 'https://meet.google.com/settings';
