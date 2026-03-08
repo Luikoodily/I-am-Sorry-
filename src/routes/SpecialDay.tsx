@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
-import moshamPhoto from '@/lib/pics/mosham.jpeg';
-import nalathPhoto from '@/lib/pics/nalath.jpeg';
+// import moshamPhoto from '@/lib/pics/mosham.jpeg';
+// import nalathPhoto from '@/lib/pics/nalath.jpeg';
 import photo1 from '@/lib/pics/1.jpeg';
 import photo2 from '@/lib/pics/2.jpeg';
 import photo3 from '@/lib/pics/3.jpeg';
@@ -329,9 +329,9 @@ function ReasonsSection() {
 
 function PhotoSection() {
   const items = [
-    { src: moshamPhoto, caption: 'My favourite', angle: '-rotate-2' },
-    { src: nalathPhoto, caption: 'My world', angle: 'rotate-2' },
-    { src: nalathPhoto, caption: 'My world', angle: 'rotate-2' },
+    // { src: moshamPhoto, caption: 'My favourite', angle: '-rotate-2' },
+    // { src: nalathPhoto, caption: 'My world', angle: 'rotate-2' },
+    // { src: nalathPhoto, caption: 'My world', angle: 'rotate-2' },
     { src: photo1, caption: 'Our adventures', angle: '-rotate-1' },
     { src: photo2, caption: 'Your smile', angle: 'rotate-1' },
     { src: photo3, caption: 'Your laugh', angle: '-rotate-2' },
